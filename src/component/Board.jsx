@@ -1,19 +1,25 @@
 import React, { forwardRef, useState, useEffect, useRef } from "react";
 import ChipImages from "./ChipImages";
 
-import chipG1 from "../img/chipG1.png";
+import scoreSpace from "../img/scoreSpace.png";
 import board from "../img/board.png";
-import boardBoom from "../img/boardboom.png"
+import boardBoom from "../img/boardboom.png";
+import dropG from "../img/dropG.png"
 
 const Board = (props) => {
   const [currentPot, setCurrentPot] = useState([]);
   const [exploded, setExploded] = useState(false);
+  const [stopped, setStopped] = useState(false);
   let boardImage = board
 
-  if (exploded) {
-    document.getElementById("explodedText").hidden = false;
+  if (exploded || stopped) {
     document.getElementById("pullButton").disabled = true;
-    boardImage = boardBoom
+    document.getElementById("stopButton").disabled = true;
+    document.getElementById("scoreBox").hidden = false;
+    if (exploded) {
+      document.getElementById("explodedText").hidden = false;
+      boardImage = boardBoom
+    }
   }
 
   let chipSpace = useRef(0);
@@ -41,39 +47,34 @@ const Board = (props) => {
     }
   }
 
-  //   {
-  //     color: "white",
-  //     value: "1",
-  //     img: "chipW1",
-  //     effect: false,
-  //     volatile: true,
-  //   },
-
   let mappedChips = currentPot.map((ingredient) => {
     return <ChipImages chipSpace={ingredient.chipSpace} img={ingredient.img} />;
   });
 
   return (
     <div>
-      <div className="row">
-        <div className="col-6">
-          {" "}
-          <h1 id="explodedText" hidden={true} style={{ color: "red" }}>
-            BOOM!
-          </h1>
-          <button id="pullButton" onClick={() => drawRandomIngredient()}>
-            PULL!
-          </button>{" "}
-        </div>
-        <div className="col-6">
-          <img className="mask" src={chipG1} width="75px"></img>{" "}
-        </div>
-      </div>
-      <div className="boardBox">
-        <img className="boardMain" src={boardImage} />
-        <img className="chips chip0" src={chipG1} width="125px"></img>
 
-        <ChipImages chipSpace={22} />
+      <div className="boardBox">
+        <div className="row">
+          <div className="col-6">
+            {" "}
+            <h1 id="explodedText" hidden={true} style={{ color: "red" }}>
+              BOOM!
+            </h1>
+            <button id="pullButton" onClick={() => drawRandomIngredient()}>
+              PULL!
+            </button>{" "}
+            <button id="stopButton" onClick={() => setStopped(true)}>
+              STOP!
+            </button>{" "}
+            <h2 id="scoreBox" hidden={true}>
+              VP = {props.scoreTrack[chipSpace.current +1].victoryPoints} BP = {props.scoreTrack[chipSpace.current +1].buyingPower}
+            </h2>{" "}
+          </div>
+        </div>
+        <img className="boardMain" src={boardImage} />
+        <img className="drop" width="90px" src={dropG} />
+        <img className={"chips chip" + (chipSpace.current + 1)} width="125px" src={scoreSpace} />
         {mappedChips}
       </div>
     </div>
