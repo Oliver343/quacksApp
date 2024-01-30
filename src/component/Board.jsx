@@ -6,6 +6,8 @@ import board from "../img/board.png";
 import boardBoom from "../img/boardboom.png";
 import dropG from "../img/dropG.png"
 
+// testing 
+
 const Board = (props) => {
   const [currentPot, setCurrentPot] = useState([]);
   const [exploded, setExploded] = useState(false);
